@@ -41,26 +41,31 @@ export default function GhostWriter() {
     toast({ title: 'Copied!', description: 'Content copied to clipboard.' });
   };
 
+  const handleClear = () => {
+    setGeneratedContent(null);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-center">Ghost Writer</h1>
       </header>
 
-      <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />
-
-      {generatedContent && (
+      {generatedContent ? (
         <GeneratedContent
           content={generatedContent}
           onRetry={handleRetry}
           onLike={handleLike}
           onDislike={handleDislike}
           onCopy={handleCopy}
+          onClear={handleClear}
           onUpdate={(update) => {
             // Implement update logic
             console.log('Updating content with:', update);
           }}
         />
+      ) : (
+        <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />
       )}
     </div>
   );

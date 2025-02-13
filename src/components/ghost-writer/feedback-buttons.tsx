@@ -1,14 +1,21 @@
 import { Button } from '@/components/ui/button';
-import { RefreshCw, ThumbsUp, ThumbsDown, Copy } from 'lucide-react';
+import { RefreshCw, ThumbsUp, ThumbsDown, Copy, Trash2 } from 'lucide-react';
 
 interface FeedbackButtonsProps {
   onRetry: () => void;
   onLike: () => void;
   onDislike: () => void;
   onCopy: () => void;
+  onClear: () => void;
 }
 
-export function FeedbackButtons({ onRetry, onLike, onDislike, onCopy }: FeedbackButtonsProps) {
+export function FeedbackButtons({
+  onRetry,
+  onLike,
+  onDislike,
+  onCopy,
+  onClear,
+}: FeedbackButtonsProps) {
   return (
     <div className="flex justify-end space-x-1">
       <Button variant="ghost" size="sm" onClick={onRetry} className="h-6 w-6">
@@ -22,6 +29,9 @@ export function FeedbackButtons({ onRetry, onLike, onDislike, onCopy }: Feedback
       </Button>
       <Button variant="ghost" size="sm" onClick={onCopy} className="h-6 w-6">
         <Copy className="h-3 w-3" />
+      </Button>
+      <Button variant="ghost" size="sm" onClick={onClear} className="h-6 w-6">
+        <Trash2 className="h-3 w-3" />
       </Button>
     </div>
   );
