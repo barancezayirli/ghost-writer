@@ -15,7 +15,7 @@ export default function GhostWriter() {
     try {
       // Implement your API call here
       const placeholderContent = `
-        <h1>${data.prompt}</h1>
+        <h1>${data.subject}</h1>
         <p>Generated content with keywords: ${data.keywords.join(', ')}</p>
         <p>Settings: ${JSON.stringify(data)}</p>
       `;
