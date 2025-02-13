@@ -10,6 +10,7 @@ interface RichTextEditorProps {
 const RichTextEditor = ({ content }: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
+    immediatelyRender: false,
     content,
   });
 

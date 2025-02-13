@@ -1,4 +1,4 @@
-import RichTextEditor from '@/components/blocks/rich-text-editor';
+import RichTextEditor from '@/components/form/rich-text-editor';
 import { FeedbackButtons } from './feedback-buttons';
 import { ContentUpdateForm } from '@/components/ghost-writer/content-update-form';
 
