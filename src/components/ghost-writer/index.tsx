@@ -2,44 +2,24 @@
 
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
-import { TitleInput } from './title-input';
-import { KeywordManager } from './keyword-manager';
-import { ContentSettings } from './content-settings';
+import { PromptForm } from './prompt-form';
 import { GeneratedContent } from './generated-content';
-import { ContentSettings as Settings } from '@/types/ghost-writer';
+import type { PromptFormData } from '@/types/ghost-writer';
 
 export default function GhostWriter() {
-  const [title, setTitle] = useState('');
-  const [keywords, setKeywords] = useState<string[]>([]);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [settings, setSettings] = useState<Settings>({
-    language: 'en',
-    tone: 'formal',
-    mode: 'fast',
-    target: 'blog',
-  });
 
-  const handleAddKeyword = (keyword: string) => {
-    setKeywords([...keywords, keyword]);
-  };
-
-  const handleRemoveKeyword = (keyword: string) => {
-    setKeywords(keywords.filter((k) => k !== keyword));
-  };
-
-  const handleSettingsChange = (newSettings: Partial<Settings>) => {
-    setSettings({ ...settings, ...newSettings });
-  };
-
-  const generateArticle = async () => {
+  const handleGenerate = async (data: PromptFormData) => {
     setIsGenerating(true);
     try {
       // Implement your API call here
       const placeholderContent = `
-        <h1>${title}</h1>
-        <p>Generated content with keywords: ${keywords.join(', ')}</p>
+        <h1>${data.prompt}</h1>
+        <p>Generated content with keywords: ${data.keywords.join(', ')}</p>
+        <p>Settings: ${JSON.stringify(data)}</p>
       `;
+      console.log('data:', data);
       setGeneratedContent(placeholderContent);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -53,7 +33,7 @@ export default function GhostWriter() {
     }
   };
 
-  const handleRetry = () => generateArticle();
+  const handleRetry = () => handleGenerate;
   const handleLike = () => toast({ title: 'Liked!', description: 'Thank you for your feedback.' });
   const handleDislike = () => toast({ title: 'Disliked', description: "We'll try to improve." });
   const handleCopy = () => {
@@ -67,18 +47,7 @@ export default function GhostWriter() {
         <h1 className="text-3xl font-bold text-center">Ghost Writer</h1>
       </header>
 
-      <TitleInput value={title} onChange={setTitle} />
-      <KeywordManager
-        keywords={keywords}
-        onAddKeyword={handleAddKeyword}
-        onRemoveKeyword={handleRemoveKeyword}
-      />
-      <ContentSettings
-        settings={settings}
-        onSettingsChange={handleSettingsChange}
-        onGenerate={generateArticle}
-        isGenerating={isGenerating}
-      />
+      <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />
 
       {generatedContent && (
         <GeneratedContent

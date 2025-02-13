@@ -1,20 +1,31 @@
 import { Textarea } from '@/components/ui/textarea';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { UseFormReturn } from 'react-hook-form';
+import { PromptFormData } from '@/types/ghost-writer';
 
 interface TitleInputProps {
-  value: string;
-  onChange: (value: string) => void;
+  form: UseFormReturn<PromptFormData>;
 }
 
-export function TitleInput({ value, onChange }: TitleInputProps) {
+export function TitleInput({ form }: TitleInputProps) {
   return (
-    <div className="mb-6">
-      <Textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Enter your title or subject here..."
-        className="w-full p-4 text-lg border-2 border-primary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-        rows={3}
-      />
-    </div>
+    <FormField
+      control={form.control}
+      name="prompt"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Subject</FormLabel>
+          <FormControl>
+            <Textarea
+              placeholder="Enter your title or subject here..."
+              className="w-full p-4 text-lg"
+              rows={3}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }
