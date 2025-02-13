@@ -10,9 +10,13 @@ export interface ContentSettings {
   target: Target;
 }
 
-export interface PromptFormData extends ContentSettings {
+export interface PromptFormData {
   subject: string;
   keywords: string[];
+  language: Language;
+  tone: Tone;
+  mode: Mode;
+  target: Target;
 }
 
 // Remove DEFAULT_SETTINGS constant as we're using inline defaults in the form

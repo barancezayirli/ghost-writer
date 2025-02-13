@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { PromptForm } from './prompt-form';
 import { GeneratedContent } from './generated-content';
+import { generate } from '@/actions/generate';
 import type { PromptFormData } from '@/types/ghost-writer';
 
 export default function GhostWriter() {
@@ -13,14 +14,20 @@ export default function GhostWriter() {
   const handleGenerate = async (data: PromptFormData) => {
     setIsGenerating(true);
     try {
-      // Implement your API call here
-      const placeholderContent = `
-        <h1>${data.subject}</h1>
-        <p>Generated content with keywords: ${data.keywords.join(', ')}</p>
-        <p>Settings: ${JSON.stringify(data)}</p>
-      `;
-      console.log('data:', data);
-      setGeneratedContent(placeholderContent);
+      const response = await generate({
+        promptName: 'blog-post',
+        promptVersion: 'v2', // Using v1 as default
+        variables: {
+          topic: data.subject,
+          keywords: data.keywords.join(', '),
+          tone: data.tone,
+          mode: data.mode,
+          target: data.target,
+          language: data.language,
+        },
+      });
+
+      setGeneratedContent(response);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({

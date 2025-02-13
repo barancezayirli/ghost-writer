@@ -1,0 +1,26 @@
+Create an engaging blog post about {{topic}} in HTML format following these guidelines:
+- Writing style: {{tone}}
+- Language: {{language}}
+- Keywords to include: {{keywords}}
+
+Required HTML structure:
+<article>
+  <h1>Engaging title here</h1>
+  
+  <p class="introduction">Start with a compelling introduction</p>
+  
+  <h2>Key sections using descriptive headings</h2>
+  <p>Content with proper paragraph breaks</p>
+  
+  <h3>Sub-sections where needed</h3>
+  <ul>
+    <li>Key points</li>
+    <li>Important takeaways</li>
+  </ul>
+  
+  <blockquote>Use quotes for impactful statements</blockquote>
+  
+  <p class="conclusion">End with a strong conclusion</p>
+</article>
+
+Note: Generate actual content following this structure, not the template itself.
