@@ -10,18 +10,18 @@ interface FeedbackButtonsProps {
 
 export function FeedbackButtons({ onRetry, onLike, onDislike, onCopy }: FeedbackButtonsProps) {
   return (
-    <div className="flex justify-center space-x-4 mt-4">
-      <Button variant="outline" size="icon" onClick={onRetry}>
-        <RefreshCw className="h-4 w-4" />
+    <div className="flex justify-end space-x-1">
+      <Button variant="ghost" size="sm" onClick={onRetry} className="h-6 w-6">
+        <RefreshCw className="h-3 w-3" />
       </Button>
-      <Button variant="outline" size="icon" onClick={onLike}>
-        <ThumbsUp className="h-4 w-4" />
+      <Button variant="ghost" size="sm" onClick={onLike} className="h-6 w-6">
+        <ThumbsUp className="h-3 w-3" />
       </Button>
-      <Button variant="outline" size="icon" onClick={onDislike}>
-        <ThumbsDown className="h-4 w-4" />
+      <Button variant="ghost" size="sm" onClick={onDislike} className="h-6 w-6">
+        <ThumbsDown className="h-3 w-3" />
       </Button>
-      <Button variant="outline" size="icon" onClick={onCopy}>
-        <Copy className="h-4 w-4" />
+      <Button variant="ghost" size="sm" onClick={onCopy} className="h-6 w-6">
+        <Copy className="h-3 w-3" />
       </Button>
     </div>
   );
