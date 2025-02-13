@@ -29,7 +29,7 @@ import {
 } from '@/components/form/form-options';
 
 const promptFormSchema = z.object({
-  prompt: z.string().min(1, 'Prompt is required'),
+  subject: z.string().min(1, 'Subject is required'),
   keywords: z.array(z.string()),
   language: z.enum(['en', 'es', 'fr', 'de']),
   tone: z.enum(['formal', 'casual', 'humorous', 'serious']),
@@ -46,7 +46,7 @@ export function PromptForm({ onSubmit, isSubmitting = false }: PromptFormProps) 
   const form = useForm<PromptFormData>({
     resolver: zodResolver(promptFormSchema),
     defaultValues: {
-      prompt: '',
+      subject: '',
       keywords: [],
       language: 'en',
       tone: 'formal',
@@ -78,10 +78,10 @@ export function PromptForm({ onSubmit, isSubmitting = false }: PromptFormProps) 
         {/* Title Input */}
         <FormField
           control={form.control}
-          name="prompt"
+          name="subject"
           render={({ field }) => (
             <FormItem className="mb-6">
-              <FormLabel className="text-sm font-medium">Title</FormLabel>
+              <FormLabel className="text-sm font-medium">Subject</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Enter your title or subject here..."

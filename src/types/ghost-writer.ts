@@ -11,7 +11,7 @@ export interface ContentSettings {
 }
 
 export interface PromptFormData extends ContentSettings {
-  prompt: string;
+  subject: string;
   keywords: string[];
 }
 
