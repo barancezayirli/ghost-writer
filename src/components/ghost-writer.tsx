@@ -1,35 +1,32 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { X, Send, RefreshCw, ThumbsUp, ThumbsDown, Copy } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import RichTextEditor from "@/components/blocks/rich-text-editor";
-import { toast } from "@/hooks/use-toast";
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { X, Send, RefreshCw, ThumbsUp, ThumbsDown, Copy } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import RichTextEditor from '@/components/blocks/rich-text-editor';
+import { toast } from '@/hooks/use-toast';
 
 export default function GhostWriter() {
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [currentKeyword, setCurrentKeyword] = useState("");
+  const [currentKeyword, setCurrentKeyword] = useState('');
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
-  const [updateInput, setUpdateInput] = useState("");
+  const [updateInput, setUpdateInput] = useState('');
 
   const addKeyword = () => {
-    if (
-      currentKeyword.trim() !== "" &&
-      !keywords.includes(currentKeyword.trim())
-    ) {
+    if (currentKeyword.trim() !== '' && !keywords.includes(currentKeyword.trim())) {
       setKeywords([...keywords, currentKeyword.trim()]);
-      setCurrentKeyword("");
+      setCurrentKeyword('');
     }
   };
 
@@ -59,35 +56,35 @@ export default function GhostWriter() {
   const handleLike = () => {
     // Implement like logic here
     toast({
-      title: "Liked!",
-      description: "Thank you for your feedback.",
+      title: 'Liked!',
+      description: 'Thank you for your feedback.',
     });
   };
 
   const handleDislike = () => {
     // Implement dislike logic here
     toast({
-      title: "Disliked",
+      title: 'Disliked',
       description: "We'll try to improve. Thank you for your feedback.",
     });
   };
 
   const handleCopy = () => {
     // Implement copy logic here
-    navigator.clipboard.writeText(generatedContent || "");
+    navigator.clipboard.writeText(generatedContent || '');
     toast({
-      title: "Copied!",
-      description: "Content copied to clipboard.",
+      title: 'Copied!',
+      description: 'Content copied to clipboard.',
     });
   };
 
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Implement update logic here
-    console.log("Updating content with:", updateInput);
+    console.log('Updating content with:', updateInput);
     // In a real application, you would send this to your AI service
     // and update the generatedContent with the response
-    setUpdateInput("");
+    setUpdateInput('');
   };
 
   return (
@@ -109,11 +106,7 @@ export default function GhostWriter() {
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
               {keywords.map((keyword) => (
-                <Badge
-                  key={keyword}
-                  variant="secondary"
-                  className="text-sm px-2 py-1"
-                >
+                <Badge key={keyword} variant="secondary" className="text-sm px-2 py-1">
                   {keyword}
                   <button
                     onClick={() => removeKeyword(keyword)}
@@ -130,7 +123,7 @@ export default function GhostWriter() {
                 value={currentKeyword}
                 onChange={(e) => setCurrentKeyword(e.target.value)}
                 onKeyPress={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     addKeyword();
                   }
                 }}
@@ -188,11 +181,7 @@ export default function GhostWriter() {
             </SelectContent>
           </Select>
         </div>
-        <Button
-          onClick={generateArticle}
-          size="lg"
-          className="w-full sm:w-auto px-6"
-        >
+        <Button onClick={generateArticle} size="lg" className="w-full sm:w-auto px-6">
           <Send className="w-4 h-4 mr-2" />
           Generate
         </Button>
@@ -217,10 +206,7 @@ export default function GhostWriter() {
             </Button>
           </div>
 
-          <form
-            onSubmit={handleUpdate}
-            className="flex items-center space-x-2 mt-4"
-          >
+          <form onSubmit={handleUpdate} className="flex items-center space-x-2 mt-4">
             <Input
               value={updateInput}
               onChange={(e) => setUpdateInput(e.target.value)}

@@ -1,4 +1,4 @@
-import GhostWriter from "@/components/ghost-writer";
+import GhostWriter from '@/components/ghost-writer';
 
 export default function Home() {
   return <GhostWriter />;

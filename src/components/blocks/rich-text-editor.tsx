@@ -1,7 +1,7 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { Button } from "@/components/ui/button";
-import { Bold, Italic, List, ListOrdered } from "lucide-react";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Button } from '@/components/ui/button';
+import { Bold, Italic, List, ListOrdered } from 'lucide-react';
 
 interface RichTextEditorProps {
   content: string;
@@ -24,7 +24,7 @@ const RichTextEditor = ({ content }: RichTextEditorProps) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "bg-muted-foreground/20" : ""}
+          className={editor.isActive('bold') ? 'bg-muted-foreground/20' : ''}
         >
           <Bold className="h-4 w-4" />
         </Button>
@@ -32,7 +32,7 @@ const RichTextEditor = ({ content }: RichTextEditorProps) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "bg-muted-foreground/20" : ""}
+          className={editor.isActive('italic') ? 'bg-muted-foreground/20' : ''}
         >
           <Italic className="h-4 w-4" />
         </Button>
@@ -40,9 +40,7 @@ const RichTextEditor = ({ content }: RichTextEditorProps) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={
-            editor.isActive("bulletList") ? "bg-muted-foreground/20" : ""
-          }
+          className={editor.isActive('bulletList') ? 'bg-muted-foreground/20' : ''}
         >
           <List className="h-4 w-4" />
         </Button>
@@ -50,9 +48,7 @@ const RichTextEditor = ({ content }: RichTextEditorProps) => {
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={
-            editor.isActive("orderedList") ? "bg-muted-foreground/20" : ""
-          }
+          className={editor.isActive('orderedList') ? 'bg-muted-foreground/20' : ''}
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
