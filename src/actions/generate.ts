@@ -1,6 +1,6 @@
 'use server';
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GoogleGenerativeAIFetchError } from '@google/generative-ai';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { Language, Tone, Mode, Target } from '@/types/ghost-writer';
@@ -37,23 +37,40 @@ export async function generate({ promptName, promptVersion, variables }: Generat
       promptTemplate
     );
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
     const result = await model.generateContent([
-      { text: 'You are a professional content writer. Always respond with valid HTML content.' },
+      {
+        text: `You are a professional content writer. You must ONLY respond with Markdown content.
+Never include HTML tags. Use proper Markdown syntax for headings (#), lists (- or 1.), emphasis (*), 
+links ([]()), and other formatting. Your entire response must be valid Markdown.`,
+      },
       { text: filledPrompt },
     ]);
 
     const response = await result.response;
-    const htmlContent = response.text();
+    let content = response.text();
 
-    // Basic validation to ensure content is wrapped in HTML
-    if (!htmlContent.includes('<')) {
-      return `<p>${htmlContent}</p>`;
+    // Validate that the response is a Markdown code block
+    if (!content.startsWith('```markdown')) {
+      throw new Error('Response is not in the expected Markdown format');
     }
 
-    return htmlContent;
+    // Remove ```markdown from the beginning and ``` from the end
+    content = content
+      .replace(/^```markdown\n/, '') // Remove opening ```markdown
+      .replace(/\n```$/, ''); // Remove closing ```
+
+    // Validate that the content is not HTML
+    if (content.includes('<') && content.includes('>')) {
+      throw new Error('Received HTML instead of Markdown');
+    }
+
+    return content;
   } catch (error) {
     console.error('Error generating content:', error);
-    throw new Error('Failed to generate content');
+    if (error instanceof GoogleGenerativeAIFetchError) {
+      throw new Error(error.statusText ?? `Error generating post`);
+    }
+    throw 'Error generating content';
   }
 }

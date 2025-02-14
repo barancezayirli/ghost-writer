@@ -26,6 +26,7 @@ export default function GhostWriter() {
           language: data.language,
         },
       });
+      console.log('response:', response);
 
       setGeneratedContent(response);
     } catch (error) {
