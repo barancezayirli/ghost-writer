@@ -22,15 +22,17 @@ export function GeneratedContent({
   onUpdate,
 }: GeneratedContentProps) {
   return (
-    <div className="space-y-4 mt-8 pt-8">
-      <RichTextEditor content={content} />
-      <FeedbackButtons
-        onRetry={onRetry}
-        onLike={onLike}
-        onDislike={onDislike}
-        onCopy={onCopy}
-        onClear={onClear}
-      />
+    <div className=" mt-8 pt-8">
+      <div className="space-y-4 mb-12">
+        <RichTextEditor content={content} />
+        <FeedbackButtons
+          onRetry={onRetry}
+          onLike={onLike}
+          onDislike={onDislike}
+          onCopy={onCopy}
+          onClear={onClear}
+        />
+      </div>
       <ContentUpdateForm onUpdate={onUpdate} />
     </div>
   );

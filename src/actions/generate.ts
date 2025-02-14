@@ -47,8 +47,9 @@ links ([]()), and other formatting. Your entire response must be valid Markdown.
       { text: filledPrompt },
     ]);
 
-    const response = await result.response;
+    const response = result.response;
     let content = response.text();
+    console.log('content:', content);
 
     // Validate that the response is a Markdown code block
     if (!content.startsWith('```markdown')) {
@@ -59,11 +60,6 @@ links ([]()), and other formatting. Your entire response must be valid Markdown.
     content = content
       .replace(/^```markdown\n/, '') // Remove opening ```markdown
       .replace(/\n```$/, ''); // Remove closing ```
-
-    // Validate that the content is not HTML
-    if (content.includes('<') && content.includes('>')) {
-      throw new Error('Received HTML instead of Markdown');
-    }
 
     return content;
   } catch (error) {
