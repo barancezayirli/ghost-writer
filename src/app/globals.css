@@ -70,3 +70,32 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .blog-content {
+    @apply /* Base typography */
+      max-w-none
+      /* Text colors and spacing */
+      text-base leading-7 
+      /* Headings */
+      [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 [&>h1]:text-primary
+      [&>h2]:text-2xl [&>h2]:font-semibold [&>h2]:mb-3 [&>h2]:text-primary/90
+      [&>h3]:text-xl [&>h3]:font-semibold [&>h3]:mb-2
+      /* Paragraphs */
+      [&>p]:my-4 [&>p]:leading-7
+      /* Lists */
+      [&>ul]:ml-6 [&>ul]:list-disc [&>ul]:my-4
+      [&>ol]:ml-6 [&>ol]:list-decimal [&>ol]:my-4
+      /* Blockquotes */
+      [&>blockquote]:border-l-4 [&>blockquote]:border-primary/20 
+      [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-6
+      /* Code blocks */
+      [&_code]:bg-muted [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5
+      [&>pre]:bg-muted [&>pre]:p-4 [&>pre]:rounded-lg
+      /* Links */
+      [&>a]:text-primary [&>a]:underline hover:[&>a]:text-primary/80
+      /* Strong and emphasis */
+      [&_strong]:text-foreground/90 [&_strong]:font-semibold
+      [&_em]:text-foreground/90;
+  }
+}

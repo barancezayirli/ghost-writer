@@ -1,4 +1,4 @@
-import RichTextEditor from '@/components/form/rich-text-editor';
+import { BlogPostCard } from './blog-post-card';
 import { FeedbackButtons } from './feedback-buttons';
 import { ContentUpdateForm } from '@/components/ghost-writer/content-update-form';
 
@@ -24,12 +24,12 @@ export function GeneratedContent({
   isGenerating,
 }: GeneratedContentProps) {
   return (
-    <div className=" mt-8 pt-8">
+    <div className="mt-8 pt-8">
       <div className="space-y-4 mb-12">
         {isGenerating && <p>Generating new content...</p>}
         {!isGenerating && (
           <>
-            <RichTextEditor content={content} />
+            <BlogPostCard content={content} />
             <FeedbackButtons
               onRetry={onRetry}
               onLike={onLike}
