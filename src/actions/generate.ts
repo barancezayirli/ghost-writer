@@ -49,53 +49,50 @@ function getGeminiModel() {
   return model;
 }
 
-export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
-  try {
-    const promptPath = path.join(
-      process.cwd(),
-      'src',
-      'prompts',
-      promptName,
-      `${promptVersion}.txt`
-    );
-    const promptTemplate = await fs.readFile(promptPath, 'utf-8');
+async function getPromptContent(
+  promptName: string,
+  promptVersion: string,
+  variables: Record<string, string>
+) {
+  const promptPath = path.join(process.cwd(), 'src', 'prompts', promptName, `${promptVersion}.txt`);
+  const promptTemplate = await fs.readFile(promptPath, 'utf-8');
 
-    // Replace variables in prompt template
-    const filledPrompt = Object.entries(variables).reduce(
-      (acc, [key, value]) => acc.replace(`{{${key}}}`, value),
-      promptTemplate
-    );
+  return Object.entries(variables).reduce(
+    (acc, [key, value]) => acc.replace(`{{${key}}}`, value),
+    promptTemplate
+  );
+}
 
-    const model = getGeminiModel();
-    const result = await model.generateContent([
-      {
-        text: `You are a professional content writer. You must ONLY respond with Markdown content.
+async function callGemini(prompt: string) {
+  const model = getGeminiModel();
+  const result = await model.generateContent([
+    {
+      text: `You are a professional content writer. You must ONLY respond with Markdown content.
 Never include HTML tags. Use proper Markdown syntax for headings (#), lists (- or 1.), emphasis (*), 
 links ([]()), and other formatting. Your entire response must be valid Markdown.`,
-      },
-      { text: filledPrompt },
-    ]);
+    },
+    { text: prompt },
+  ]);
 
-    const response = result.response;
-    let content = response.text();
-    console.log('content:', content);
+  const response = result.response;
+  const content = response.text();
 
-    // Validate that the response is a Markdown code block
-    if (!content.startsWith('```markdown')) {
-      throw new Error('Response is not in the expected Markdown format');
-    }
+  if (!content.startsWith('```markdown')) {
+    throw new Error('Response is not in the expected Markdown format');
+  }
 
-    // Remove ```markdown from the beginning and ``` from the end
-    content = content
-      .replace(/^```markdown\n/, '') // Remove opening ```markdown
-      .replace(/\n```$/, ''); // Remove closing ```
+  return content.replace(/^```markdown\n/, '').replace(/\n```$/, '');
+}
 
-    return content;
+export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
+  try {
+    const filledPrompt = await getPromptContent(promptName, promptVersion, variables);
+    return await callGemini(filledPrompt);
   } catch (error) {
     console.error('Error generating content:', error);
     if (error instanceof GoogleGenerativeAIFetchError) {
-      throw new Error(error.statusText ?? `Error generating post`);
+      throw new Error(error.statusText ?? 'Error generating post');
     }
-    throw 'Error generating content';
+    throw new Error('Error generating content');
   }
 }
