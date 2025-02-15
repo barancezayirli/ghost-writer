@@ -6,11 +6,14 @@ import { PromptForm } from './prompt-form';
 import { GeneratedContent } from './generated-content';
 import { generate } from '@/actions/generate';
 import type { PromptFormData } from '@/types/ghost-writer';
+import { stripHtml } from '@/lib/utils';
+import { useCopyToClipboard } from 'usehooks-ts';
 
 export default function GhostWriter() {
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prompt, setPrompt] = useState<PromptFormData | null>(null);
+  const [, copy] = useCopyToClipboard();
 
   const handleGenerate = async (data: PromptFormData) => {
     setIsGenerating(true);
@@ -78,8 +81,10 @@ export default function GhostWriter() {
   const handleRetry = () => (prompt ? handleGenerate(prompt) : undefined);
   const handleLike = () => toast({ title: 'Liked!', description: 'Thank you for your feedback.' });
   const handleDislike = () => toast({ title: 'Disliked', description: "We'll try to improve." });
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedContent || '');
+
+  const handleCopy = async () => {
+    const textToCopy = stripHtml(generatedContent || '');
+    await copy(textToCopy);
     toast({ title: 'Copied!', description: 'Content copied to clipboard.' });
   };
 
