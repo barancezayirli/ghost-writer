@@ -14,6 +14,7 @@ const prompt: PromptTemplate = {
     * Support your points with relevant examples and evidence.
     * Use lists for organized presentation of data or key points.
     * Employ transition words for a smooth flow between sections.
+    * **When including links, use descriptive and relevant link text instead of raw URLs.**
 
 2. **Title Creation:**
     * Generate a concise and compelling title, no more than 60 characters.

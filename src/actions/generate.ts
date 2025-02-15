@@ -66,27 +66,39 @@ function getPromptContent(
 }
 
 async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
-  const model = getGeminiModel(mode);
-  const result = await model.generateContent([{ text: systemMessage }, { text: prompt }]);
+  const maxAttempts = 3;
+  let attempt = 1;
 
-  const response = result.response;
-  const content = response.text();
+  while (attempt <= maxAttempts) {
+    const model = getGeminiModel(mode);
+    const result = await model.generateContent([{ text: systemMessage }, { text: prompt }]);
 
-  if (!content.startsWith('```html')) {
-    throw new Error('Response is not in the expected HTML format');
+    const response = result.response;
+    const content = response.text();
+
+    if (!content.startsWith('```html')) {
+      throw new Error('Response is not in the expected HTML format');
+    }
+
+    const htmlContent = content
+      .replace(/^```html\n/, '')
+      .replace(/\n```$/, '')
+      .trim();
+
+    const validation = validateHtmlOutput(htmlContent);
+    if (validation.isValid) {
+      return htmlContent;
+    }
+
+    if (attempt === maxAttempts) {
+      break;
+    }
+
+    console.warn(`Attempt ${attempt}/${maxAttempts} failed validation. Retrying...`);
+    attempt++;
   }
 
-  const htmlContent = content
-    .replace(/^```html\n/, '')
-    .replace(/\n```$/, '')
-    .trim();
-
-  const validation = validateHtmlOutput(htmlContent);
-  if (!validation.isValid) {
-    throw new Error(`Invalid AI output: ${validation.errors.join(', ')}`);
-  }
-
-  return htmlContent;
+  throw new Error(`Failed to generate valid HTML after ${maxAttempts} attempts`);
 }
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
@@ -98,10 +110,12 @@ export async function generate({ promptName, promptVersion, variables }: Generat
     );
     return await callGemini(filledTemplate, systemMessage, variables.mode);
   } catch (error) {
-    console.error('Error generating content:', error);
     if (error instanceof GoogleGenerativeAIFetchError) {
       throw new Error(error.statusText ?? 'Error generating post');
     }
-    throw new Error('Error generating content');
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error('Unexpected error');
   }
 }
