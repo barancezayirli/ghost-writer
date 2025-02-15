@@ -1,11 +1,13 @@
 'use server';
 
-import { GoogleGenerativeAI, GoogleGenerativeAIFetchError } from '@google/generative-ai';
+import {
+  GoogleGenerativeAI,
+  GoogleGenerativeAIFetchError,
+  RequestOptions,
+} from '@google/generative-ai';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { Language, Tone, Mode, Target } from '@/types/ghost-writer';
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
 type GenerateParams = {
   promptName: string;
@@ -19,6 +21,34 @@ type GenerateParams = {
     target: Target;
   };
 };
+
+function getGeminiModel() {
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error('Google API key is not set in the environment variables');
+  }
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+  let requestOptions: RequestOptions | undefined;
+  if (process.env.HELICONE_API_KEY) {
+    const customHeaders = new Headers({
+      'Helicone-Auth': `Bearer ${process.env.HELICONE_API_KEY}`,
+      'Helicone-Target-URL': `https://generativelanguage.googleapis.com`,
+    });
+
+    requestOptions = {
+      customHeaders: customHeaders,
+      baseUrl: 'https://gateway.helicone.ai',
+    } as RequestOptions;
+  }
+
+  const model = genAI.getGenerativeModel(
+    {
+      model: 'gemini-2.0-flash',
+    },
+    requestOptions
+  );
+
+  return model;
+}
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
   try {
@@ -37,7 +67,7 @@ export async function generate({ promptName, promptVersion, variables }: Generat
       promptTemplate
     );
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = getGeminiModel();
     const result = await model.generateContent([
       {
         text: `You are a professional content writer. You must ONLY respond with Markdown content.
