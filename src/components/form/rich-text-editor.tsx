@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { Markdown } from 'tiptap-markdown';
 import { Button } from '@/components/ui/button';
 import { Bold, Italic, List, ListOrdered } from 'lucide-react';
 
@@ -9,8 +10,9 @@ interface RichTextEditorProps {
 
 const RichTextEditor = ({ content }: RichTextEditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Markdown],
     content: content,
+    immediatelyRender: false,
     onBeforeCreate: ({ editor }) => {
       editor.storage.characterCount = {
         characters: 0,
