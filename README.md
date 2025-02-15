@@ -65,6 +65,8 @@ LLM outputs are inherently unpredictable. While providing AI-specific guidelines
 
 To enhance user experience, I implemented a retry mechanism for failed LLM calls. Instead of immediately failing when the output structure isn't correct, the system makes up to three attempts to generate valid content. With an average input size of 610 tokens, this retry approach provides a good balance between reliability and cost-effectiveness.
 
+To track user satisfaction and improve the system, I implemented a feedback mechanism using Helicone's custom property feature. Each generated content has associated feedback data stored alongside its original request log. Users can provide feedback through "Like/Dislike" buttons, and the system also automatically records negative feedback when users click "Retry" to regenerate content. This integrated approach allows me to maintain a comprehensive view of content quality and user satisfaction directly within the request logs, making it easier to identify patterns and improve the prompt engineering process.
+
 ## Prompt Engineering
 
 My journey with prompt engineering has been quite interesting. I started by experimenting with local LLMs through Ollama, which gave me the freedom to test and iterate quickly without worrying about API costs. Once I had a solid foundation, I moved to Gemini and began fine-tuning my prompts for its specific characteristics.
