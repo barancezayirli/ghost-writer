@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { generate } from '@/actions/generate';
+import { feedback } from '@/actions/feedback';
 import { PromptForm } from './prompt-form';
 import { GeneratedContent } from './generated-content';
-import { generate } from '@/actions/generate';
 import type { PromptFormData } from '@/types/ghost-writer';
 import { stripHtml } from '@/lib/utils';
 import { useCopyToClipboard } from 'usehooks-ts';
@@ -16,9 +17,10 @@ export default function GhostWriter() {
   const [prompt, setPrompt] = useState<PromptFormData | null>(null);
   const [, copy] = useCopyToClipboard();
 
-  const handleGenerate = async (data: PromptFormData) => {
+  const handleGenerate = async (data: PromptFormData, isRetry = false) => {
     setIsGenerating(true);
     setPrompt(data);
+    const oldRequestId = requestId;
     try {
       const response = await generate({
         promptName: 'blog-post',
@@ -33,7 +35,6 @@ export default function GhostWriter() {
       });
       setGeneratedContent(response.content);
       setRequestId(response.requestId);
-      console.log('Request id:', response.requestId);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
@@ -43,6 +44,15 @@ export default function GhostWriter() {
       });
     } finally {
       setIsGenerating(false);
+    }
+    if (isRetry && oldRequestId) {
+      try {
+        await feedback({ requestId: oldRequestId, result: false });
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        //This is for logging on cloud but there is no need for that for the tool
+        console.error(`Failed to send feedback: ${errorMessage}`);
+      }
     }
   };
 
@@ -83,9 +93,31 @@ export default function GhostWriter() {
     }
   };
 
-  const handleRetry = () => (prompt ? handleGenerate(prompt) : undefined);
-  const handleLike = () => toast({ title: 'Liked!', description: 'Thank you for your feedback.' });
-  const handleDislike = () => toast({ title: 'Disliked', description: "We'll try to improve." });
+  const handleRetry = () => (prompt ? handleGenerate(prompt, true) : undefined);
+
+  const handleFeedback = async (isPositive: boolean) => {
+    if (!requestId) return;
+    try {
+      const response = await feedback({ requestId, result: isPositive });
+      // should check here if response is success but only self host helicone supports custom values
+      if (response) {
+        toast({
+          title: isPositive ? 'Liked!' : 'Disliked',
+          description: isPositive ? 'Thank you for your feedback.' : "We'll try to improve.",
+        });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send feedback';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleLike = () => handleFeedback(true);
+  const handleDislike = () => handleFeedback(false);
 
   const handleCopy = async () => {
     const textToCopy = stripHtml(generatedContent || '');
@@ -118,7 +150,6 @@ export default function GhostWriter() {
             }
           }}
           isGenerating={isGenerating}
-          requestId={requestId}
         />
       ) : (
         <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />
