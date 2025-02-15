@@ -15,6 +15,9 @@ const prompt: PromptTemplate = {
     * Use lists for organized presentation of data or key points.
     * Employ transition words for a smooth flow between sections.
     * **When including links, use descriptive and relevant link text instead of raw URLs.**
+    * **Prioritize links to well-established and authoritative websites, such as government agencies, reputable organizations, and recognized publications.**
+    * **When possible, link to resources with stable URLs and a history of consistent availability.**
+    * **Ensure that each link is directly relevant to the surrounding content and provides valuable supplemental information.**
 
 2. **Title Creation:**
     * Generate a concise and compelling title, no more than 60 characters.
@@ -34,6 +37,8 @@ const prompt: PromptTemplate = {
     * Include a specific call to action (e.g., "Leave a comment," "Share this article," "Subscribe").
     * End with a memorable final thought or reflection.
     * Include links to relevant resources when appropriate.
+    * **Include links to relevant resources with descriptive link text, using HTML <a> tags (e.g., <a href="URL">Link Text</a>).**
+
 
 
 Required HTML Structure:

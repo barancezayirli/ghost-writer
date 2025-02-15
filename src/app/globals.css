@@ -92,8 +92,8 @@ body {
       /* Code blocks */
       [&_code]:bg-muted [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5
       [&>pre]:bg-muted [&>pre]:p-4 [&>pre]:rounded-lg
-      /* Links */
-      [&>a]:text-primary [&>a]:underline hover:[&>a]:text-primary/80
+      /* Links - Updated to catch all anchor tags */
+      [&_a]:text-primary [&_a]:underline hover:[&_a]:text-primary/80
       /* Strong and emphasis */
       [&_strong]:text-foreground/90 [&_strong]:font-semibold
       [&_em]:text-foreground/90;

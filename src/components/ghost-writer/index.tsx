@@ -35,7 +35,7 @@ export default function GhostWriter() {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
         title: 'Error',
-        description: `Failed to generate content: ${errorMessage}`,
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
