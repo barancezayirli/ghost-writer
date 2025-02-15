@@ -57,12 +57,16 @@ describe('generate', () => {
 
   // Success cases
   describe('successful generation', () => {
-    it('should generate valid HTML content', async () => {
+    it('should generate valid HTML content with UUID request ID', async () => {
       mockGenerateContent.mockResolvedValueOnce(mockValidResponse);
 
       const result = await generate(defaultParams);
 
-      expect(result).toBe(validHtmlResponse);
+      expect(result).toHaveProperty('content', validHtmlResponse);
+      expect(result).toHaveProperty('requestId');
+      expect(result.requestId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      );
       expect(mockGenerateContent).toHaveBeenCalledTimes(1);
     });
   });
@@ -106,7 +110,8 @@ describe('generate', () => {
       mockGenerateContent.mockResolvedValue(mockValidResponse);
 
       const result = await generate(defaultParams);
-      expect(result).toBe(validHtmlResponse);
+      expect(result).toHaveProperty('content', validHtmlResponse);
+      expect(result).toHaveProperty('requestId');
       expect(mockGenerateContent).toHaveBeenCalledTimes(3);
       expect(validateHtmlOutput).toHaveBeenCalledTimes(3);
     });
@@ -119,7 +124,8 @@ describe('generate', () => {
       mockGenerateContent.mockResolvedValue(mockValidResponse);
 
       const result = await generate(defaultParams);
-      expect(result).toBe(validHtmlResponse);
+      expect(result).toHaveProperty('content', validHtmlResponse);
+      expect(result).toHaveProperty('requestId');
       expect(mockGenerateContent).toHaveBeenCalledTimes(2);
       expect(validateHtmlOutput).toHaveBeenCalledTimes(2);
     });

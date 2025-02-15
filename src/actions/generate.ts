@@ -5,6 +5,7 @@ import {
   GoogleGenerativeAIFetchError,
   RequestOptions,
 } from '@google/generative-ai';
+import { v4 as uuidv4 } from 'uuid';
 import { Language, Tone, Mode } from '@/types/ghost-writer';
 import { PromptName, PromptVersion, getPrompt } from '@/prompts';
 import { validateHtmlOutput } from '@/utils/validateOutput';
@@ -23,7 +24,12 @@ type GenerateParams = {
   };
 };
 
-function getGeminiModel(mode: Mode) {
+// Simple id generator can be updated with a more sophisticated one
+function generateRequestId(): string {
+  return uuidv4();
+}
+
+function getGeminiModel(mode: Mode, requestId: string) {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error('Google API key is not set in the environment variables');
   }
@@ -32,6 +38,7 @@ function getGeminiModel(mode: Mode) {
   if (process.env.HELICONE_API_KEY) {
     const customHeaders = new Headers({
       'Helicone-Auth': `Bearer ${process.env.HELICONE_API_KEY}`,
+      'Helicone-Request-Id': requestId,
       'Helicone-Target-URL': `https://generativelanguage.googleapis.com`,
     });
 
@@ -65,12 +72,12 @@ function getPromptContent(
   return { filledTemplate, systemMessage: prompt.systemMessage };
 }
 
-async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
+async function callGemini(prompt: string, systemMessage: string, mode: Mode, requestId: string) {
   const maxAttempts = 3;
   let attempt = 1;
 
   while (attempt <= maxAttempts) {
-    const model = getGeminiModel(mode);
+    const model = getGeminiModel(mode, requestId);
     const result = await model.generateContent([{ text: systemMessage }, { text: prompt }]);
 
     const response = result.response;
@@ -103,12 +110,17 @@ async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
   try {
+    const requestId = generateRequestId();
     const { filledTemplate, systemMessage } = getPromptContent(
       promptName,
       promptVersion,
       variables
     );
-    return await callGemini(filledTemplate, systemMessage, variables.mode);
+    const content = await callGemini(filledTemplate, systemMessage, variables.mode, requestId);
+    return {
+      content,
+      requestId,
+    };
   } catch (error) {
     if (error instanceof GoogleGenerativeAIFetchError) {
       throw new Error(error.statusText ?? 'Error generating post');

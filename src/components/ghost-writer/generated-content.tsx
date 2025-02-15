@@ -11,6 +11,7 @@ interface GeneratedContentProps {
   onClear: () => void;
   onUpdate: (update: string) => void;
   isGenerating: boolean;
+  requestId: string | null;
 }
 
 export function GeneratedContent({
@@ -22,6 +23,7 @@ export function GeneratedContent({
   onClear,
   onUpdate,
   isGenerating,
+  requestId,
 }: GeneratedContentProps) {
   return (
     <div className="mt-8 pt-8">
@@ -36,6 +38,7 @@ export function GeneratedContent({
               onDislike={onDislike}
               onCopy={onCopy}
               onClear={onClear}
+              requestId={requestId}
             />
           </>
         )}

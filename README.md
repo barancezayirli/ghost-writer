@@ -63,7 +63,7 @@ The goal is to do one thing well: generate quality blog posts with AI assistance
 
 LLM outputs are inherently unpredictable. While providing AI-specific guidelines helps, it doesn't guarantee consistent responses. To address this, I structured the outputs as HTML and implemented validation checks to ensure proper structure. This approach has helped me mitigate consistency issues. I also added unit tests to provide additional confidence in the tool's reliability.
 
-To enhance user experience, I implemented a retry mechanism for failed LLM calls. Instead of immediately failing when the output structure isn't correct, the system makes up to three attempts to generate valid content. With an average input size of 210 tokens, this retry approach provides a good balance between reliability and cost-effectiveness.
+To enhance user experience, I implemented a retry mechanism for failed LLM calls. Instead of immediately failing when the output structure isn't correct, the system makes up to three attempts to generate valid content. With an average input size of 610 tokens, this retry approach provides a good balance between reliability and cost-effectiveness.
 
 ## Prompt Engineering
 

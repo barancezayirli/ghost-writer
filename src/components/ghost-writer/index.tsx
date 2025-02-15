@@ -11,6 +11,7 @@ import { useCopyToClipboard } from 'usehooks-ts';
 
 export default function GhostWriter() {
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prompt, setPrompt] = useState<PromptFormData | null>(null);
   const [, copy] = useCopyToClipboard();
@@ -30,7 +31,9 @@ export default function GhostWriter() {
           language: data.language,
         },
       });
-      setGeneratedContent(response);
+      setGeneratedContent(response.content);
+      setRequestId(response.requestId);
+      console.log('Request id:', response.requestId);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
@@ -60,7 +63,8 @@ export default function GhostWriter() {
             userPrompt,
           },
         });
-        setGeneratedContent(response);
+        setGeneratedContent(response.content);
+        setRequestId(response.requestId);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
         toast({
@@ -75,6 +79,7 @@ export default function GhostWriter() {
       // There maybe an error just reset the UI
       setPrompt(null);
       setGeneratedContent(null);
+      setRequestId(null);
     }
   };
 
@@ -113,6 +118,7 @@ export default function GhostWriter() {
             }
           }}
           isGenerating={isGenerating}
+          requestId={requestId}
         />
       ) : (
         <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />

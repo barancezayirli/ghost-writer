@@ -13,6 +13,7 @@ const config = {
       },
     ],
   },
+  testMatch: ['<rootDir>/src/**/*.(test|spec).(js|ts|tsx)'],
 };
 
 module.exports = config;

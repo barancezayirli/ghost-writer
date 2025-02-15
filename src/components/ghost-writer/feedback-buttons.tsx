@@ -7,6 +7,7 @@ interface FeedbackButtonsProps {
   onDislike: () => void;
   onCopy: () => void;
   onClear: () => void;
+  requestId: string | null;
 }
 
 export function FeedbackButtons({
