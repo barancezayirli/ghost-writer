@@ -10,9 +10,11 @@ import type { PromptFormData } from '@/types/ghost-writer';
 export default function GhostWriter() {
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [prompt, setPrompt] = useState<PromptFormData | null>(null);
 
   const handleGenerate = async (data: PromptFormData) => {
     setIsGenerating(true);
+    setPrompt(data);
     try {
       const response = await generate({
         promptName: 'blog-post',
@@ -40,7 +42,7 @@ export default function GhostWriter() {
     }
   };
 
-  const handleRetry = () => handleGenerate;
+  const handleRetry = () => (prompt ? handleGenerate(prompt) : undefined);
   const handleLike = () => toast({ title: 'Liked!', description: 'Thank you for your feedback.' });
   const handleDislike = () => toast({ title: 'Disliked', description: "We'll try to improve." });
   const handleCopy = () => {
@@ -49,6 +51,7 @@ export default function GhostWriter() {
   };
 
   const handleClear = () => {
+    setPrompt(null);
     setGeneratedContent(null);
   };
 

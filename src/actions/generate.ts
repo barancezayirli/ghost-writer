@@ -74,8 +74,6 @@ Use proper HTML tags for structure and formatting. Your entire response must be 
     { text: prompt },
   ]);
 
-  console.log('Gemini response:', result);
-
   const response = result.response;
   const content = response.text();
 
