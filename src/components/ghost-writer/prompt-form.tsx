@@ -16,12 +16,7 @@ import { PromptFormData } from '@/types/ghost-writer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { SelectField } from '@/components/form/select-field';
-import {
-  LANGUAGE_OPTIONS,
-  TONE_OPTIONS,
-  MODE_OPTIONS,
-  TARGET_OPTIONS,
-} from '@/components/form/form-options';
+import { LANGUAGE_OPTIONS, TONE_OPTIONS, MODE_OPTIONS } from '@/components/form/form-options';
 import { KeywordInput } from '@/components/form/keyword-input';
 
 const promptFormSchema = z.object({
@@ -30,7 +25,6 @@ const promptFormSchema = z.object({
   language: z.enum(['en', 'es', 'fr', 'de']),
   tone: z.enum(['formal', 'casual', 'humorous', 'serious']),
   mode: z.enum(['fast', 'slow']),
-  target: z.enum(['blog', 'x', 'linkedin']),
 });
 
 interface PromptFormProps {
@@ -46,7 +40,7 @@ export function PromptForm({ onSubmit, isSubmitting = false }: PromptFormProps) 
       keywords: [],
       language: 'en',
       tone: 'formal',
-      mode: 'slow',
+      mode: 'fast',
       target: 'blog',
     },
   });
@@ -104,13 +98,6 @@ export function PromptForm({ onSubmit, isSubmitting = false }: PromptFormProps) 
               label="Mode"
               placeholder="Select mode"
               options={MODE_OPTIONS}
-            />
-            <SelectField
-              form={form}
-              name="target"
-              label="Target"
-              placeholder="Select target"
-              options={TARGET_OPTIONS}
             />
           </div>
 

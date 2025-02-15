@@ -7,7 +7,7 @@ import {
 } from '@google/generative-ai';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { Language, Tone, Mode, Target } from '@/types/ghost-writer';
+import { Language, Tone, Mode } from '@/types/ghost-writer';
 
 type GenerateParams = {
   promptName: string;
@@ -18,7 +18,6 @@ type GenerateParams = {
     language: Language;
     tone: Tone;
     mode: Mode;
-    target: Target;
   };
 };
 

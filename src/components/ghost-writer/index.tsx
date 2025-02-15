@@ -22,7 +22,6 @@ export default function GhostWriter() {
           keywords: data.keywords.join(', '),
           tone: data.tone,
           mode: data.mode,
-          target: data.target,
           language: data.language,
         },
       });

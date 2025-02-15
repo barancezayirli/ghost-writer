@@ -18,5 +18,3 @@ export interface PromptFormData {
   mode: Mode;
   target: Target;
 }
-
-// Remove DEFAULT_SETTINGS constant as we're using inline defaults in the form
