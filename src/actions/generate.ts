@@ -7,6 +7,7 @@ import {
 } from '@google/generative-ai';
 import { Language, Tone, Mode } from '@/types/ghost-writer';
 import { PromptName, PromptVersion, getPrompt } from '@/prompts';
+import { validateHtmlOutput } from '@/utils/validateOutput';
 
 type GenerateParams = {
   promptName: PromptName;
@@ -75,10 +76,17 @@ async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
     throw new Error('Response is not in the expected HTML format');
   }
 
-  return content
+  const htmlContent = content
     .replace(/^```html\n/, '')
     .replace(/\n```$/, '')
     .trim();
+
+  const validation = validateHtmlOutput(htmlContent);
+  if (!validation.isValid) {
+    throw new Error(`Invalid AI output: ${validation.errors.join(', ')}`);
+  }
+
+  return htmlContent;
 }
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
