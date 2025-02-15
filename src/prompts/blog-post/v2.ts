@@ -1,4 +1,8 @@
-Create an engaging blog post about {{topic}} in HTML format following these guidelines:
+import { PromptTemplate } from '@/types/prompt';
+
+const prompt: PromptTemplate = {
+  systemMessage: 'You are a professional content writer. You must ONLY respond with HTML content.',
+  template: `Create an engaging blog post about {{topic}} following these guidelines:
 
 1. Start with an outline:
 - Create a logical flow of main points and subpoints
@@ -29,27 +33,20 @@ Create an engaging blog post about {{topic}} in HTML format following these guid
 5. Conclude with impact:
 - Summarize key takeaways
 - Include a clear call-to-action
-- Encourage reader engagement (comments, shares)
+- Encourage reader engagement
 - Link to relevant resources when appropriate
 
-Required HTML structure:
+Required HTML Structure:
 <article>
-  <h1>Engaging title here</h1>
-  
-  <p class="introduction">Start with a compelling introduction</p>
-  
-  <h2>Key sections using descriptive headings</h2>
-  <p>Content with proper paragraph breaks</p>
-  
-  <h3>Sub-sections where needed</h3>
-  <ul>
-    <li>Key points</li>
-    <li>Important takeaways</li>
-  </ul>
-  
-  <blockquote>Use quotes for impactful statements</blockquote>
-  
-  <p class="conclusion">End with a strong conclusion</p>
-</article>
+  <h1>Title</h1>
+  <p class="introduction">Introduction</p>
+  <h2>Main Sections</h2>
+  <p>Content</p>
+  <h3>Sub-sections</h3>
+  <ul><li>Key points</li></ul>
+  <blockquote>Important quotes</blockquote>
+  <p class="conclusion">Conclusion</p>
+</article>`,
+};
 
-Note: Generate actual content following this structure, not the template itself.
+export default prompt;

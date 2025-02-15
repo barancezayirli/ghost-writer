@@ -5,19 +5,20 @@ import {
   GoogleGenerativeAIFetchError,
   RequestOptions,
 } from '@google/generative-ai';
-import { promises as fs } from 'fs';
-import path from 'path';
 import { Language, Tone, Mode } from '@/types/ghost-writer';
+import { PromptName, PromptVersion, getPrompt } from '@/prompts';
 
 type GenerateParams = {
-  promptName: string;
-  promptVersion: string;
+  promptName: PromptName;
+  promptVersion: PromptVersion<PromptName>;
   variables: {
     topic: string;
     keywords: string;
     language: Language;
     tone: Tone;
     mode: Mode;
+    content?: string; // Optional content for improve prompt
+    userPrompt?: string; // The user's improvement request
   };
 };
 
@@ -49,30 +50,23 @@ function getGeminiModel() {
   return model;
 }
 
-async function getPromptContent(
-  promptName: string,
-  promptVersion: string,
+function getPromptContent(
+  promptName: PromptName,
+  promptVersion: PromptVersion<PromptName>,
   variables: Record<string, string>
 ) {
-  const promptPath = path.join(process.cwd(), 'src', 'prompts', promptName, `${promptVersion}.txt`);
-  const promptTemplate = await fs.readFile(promptPath, 'utf-8');
-
-  return Object.entries(variables).reduce(
+  const prompt = getPrompt(promptName, promptVersion);
+  const filledTemplate = Object.entries(variables).reduce(
     (acc, [key, value]) => acc.replace(`{{${key}}}`, value),
-    promptTemplate
+    prompt.template
   );
+
+  return { filledTemplate, systemMessage: prompt.systemMessage };
 }
 
-async function callGemini(prompt: string) {
+async function callGemini(prompt: string, systemMessage: string) {
   const model = getGeminiModel();
-  const result = await model.generateContent([
-    {
-      text: `You are a professional content writer. You must ONLY respond with HTML content.
-Your response must be wrapped in a code block starting with \`\`\`html and ending with \`\`\`.
-Use proper HTML tags for structure and formatting. Your entire response must be valid HTML that can be directly inserted into a webpage.`,
-    },
-    { text: prompt },
-  ]);
+  const result = await model.generateContent([{ text: systemMessage }, { text: prompt }]);
 
   const response = result.response;
   const content = response.text();
@@ -81,7 +75,6 @@ Use proper HTML tags for structure and formatting. Your entire response must be 
     throw new Error('Response is not in the expected HTML format');
   }
 
-  // Remove ```html from the beginning and ``` from the end
   return content
     .replace(/^```html\n/, '')
     .replace(/\n```$/, '')
@@ -90,8 +83,12 @@ Use proper HTML tags for structure and formatting. Your entire response must be 
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
   try {
-    const filledPrompt = await getPromptContent(promptName, promptVersion, variables);
-    return await callGemini(filledPrompt);
+    const { filledTemplate, systemMessage } = await getPromptContent(
+      promptName,
+      promptVersion,
+      variables
+    );
+    return await callGemini(filledTemplate, systemMessage);
   } catch (error) {
     console.error('Error generating content:', error);
     if (error instanceof GoogleGenerativeAIFetchError) {
