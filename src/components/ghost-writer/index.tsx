@@ -27,8 +27,6 @@ export default function GhostWriter() {
           language: data.language,
         },
       });
-      console.log('response:', response);
-
       setGeneratedContent(response);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -70,9 +68,9 @@ export default function GhostWriter() {
           onCopy={handleCopy}
           onClear={handleClear}
           onUpdate={(update) => {
-            // Implement update logic
             console.log('Updating content with:', update);
           }}
+          isGenerating={isGenerating}
         />
       ) : (
         <PromptForm onSubmit={handleGenerate} isSubmitting={isGenerating} />

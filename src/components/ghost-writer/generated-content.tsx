@@ -10,6 +10,7 @@ interface GeneratedContentProps {
   onCopy: () => void;
   onClear: () => void;
   onUpdate: (update: string) => void;
+  isGenerating: boolean;
 }
 
 export function GeneratedContent({
@@ -20,20 +21,26 @@ export function GeneratedContent({
   onCopy,
   onClear,
   onUpdate,
+  isGenerating,
 }: GeneratedContentProps) {
   return (
     <div className=" mt-8 pt-8">
       <div className="space-y-4 mb-12">
-        <RichTextEditor content={content} />
-        <FeedbackButtons
-          onRetry={onRetry}
-          onLike={onLike}
-          onDislike={onDislike}
-          onCopy={onCopy}
-          onClear={onClear}
-        />
+        {isGenerating && <p>Generating new content...</p>}
+        {!isGenerating && (
+          <>
+            <RichTextEditor content={content} />
+            <FeedbackButtons
+              onRetry={onRetry}
+              onLike={onLike}
+              onDislike={onDislike}
+              onCopy={onCopy}
+              onClear={onClear}
+            />
+          </>
+        )}
       </div>
-      <ContentUpdateForm onUpdate={onUpdate} />
+      {!isGenerating && <ContentUpdateForm onUpdate={onUpdate} />}
     </div>
   );
 }
