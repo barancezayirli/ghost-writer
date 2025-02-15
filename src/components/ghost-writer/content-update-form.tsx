@@ -25,7 +25,7 @@ export function ContentUpdateForm({ onUpdate }: ContentUpdateFormProps) {
           placeholder="Suggest changes or ask for updates..."
           className="flex-grow"
         />
-        <Button type="submit">
+        <Button type="submit" disabled={!updateInput}>
           <Send className="h-4 w-4 mr-2" />
           Update
         </Button>

@@ -40,6 +40,41 @@ export default function GhostWriter() {
     }
   };
 
+  const handleImprove = async (userPrompt: string) => {
+    if (prompt && generatedContent) {
+      try {
+        setIsGenerating(true);
+        const response = await generate({
+          promptName: 'improve',
+          promptVersion: 'v1', // Using v1 as default
+          variables: {
+            topic: prompt.subject,
+            keywords: prompt.keywords.join(', '),
+            tone: prompt.tone,
+            mode: prompt.mode,
+            language: prompt.language,
+            content: generatedContent,
+            userPrompt,
+          },
+        });
+        setGeneratedContent(response);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        toast({
+          title: 'Error',
+          description: `Failed to generate content: ${errorMessage}`,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsGenerating(false);
+      }
+    } else {
+      // There maybe an error just reset the UI
+      setPrompt(null);
+      setGeneratedContent(null);
+    }
+  };
+
   const handleRetry = () => (prompt ? handleGenerate(prompt) : undefined);
   const handleLike = () => toast({ title: 'Liked!', description: 'Thank you for your feedback.' });
   const handleDislike = () => toast({ title: 'Disliked', description: "We'll try to improve." });
@@ -67,8 +102,10 @@ export default function GhostWriter() {
           onDislike={handleDislike}
           onCopy={handleCopy}
           onClear={handleClear}
-          onUpdate={(update) => {
-            console.log('Updating content with:', update);
+          onUpdate={async (prompt: string) => {
+            if (prompt) {
+              await handleImprove(prompt);
+            }
           }}
           isGenerating={isGenerating}
         />
