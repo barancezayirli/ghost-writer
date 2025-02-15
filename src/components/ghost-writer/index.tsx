@@ -21,7 +21,7 @@ export default function GhostWriter() {
     try {
       const response = await generate({
         promptName: 'blog-post',
-        promptVersion: 'v2', // Using v1 as default
+        promptVersion: 'v3', // Using v1 as default
         variables: {
           topic: data.subject,
           keywords: data.keywords.join(', '),

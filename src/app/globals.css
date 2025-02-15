@@ -78,9 +78,9 @@ body {
       /* Text colors and spacing */
       text-base leading-7 
       /* Headings */
-      [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 [&>h1]:text-primary
-      [&>h2]:text-2xl [&>h2]:font-semibold [&>h2]:mb-3 [&>h2]:text-primary/90
-      [&>h3]:text-xl [&>h3]:font-semibold [&>h3]:mb-2
+      [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:my-4 [&>h1]:text-primary
+      [&>h2]:text-2xl [&>h2]:font-semibold [&>h2]:my-3 [&>h2]:text-primary/90
+      [&>h3]:text-xl [&>h3]:font-semibold [&>h3]:my-2
       /* Paragraphs */
       [&>p]:my-4 [&>p]:leading-7
       /* Lists */

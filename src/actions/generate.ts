@@ -22,7 +22,7 @@ type GenerateParams = {
   };
 };
 
-function getGeminiModel() {
+function getGeminiModel(mode: Mode) {
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error('Google API key is not set in the environment variables');
   }
@@ -42,7 +42,7 @@ function getGeminiModel() {
 
   const model = genAI.getGenerativeModel(
     {
-      model: 'gemini-2.0-flash',
+      model: mode === 'fast' ? 'gemini-2.0-flash' : 'gemini-pro',
     },
     requestOptions
   );
@@ -64,8 +64,8 @@ function getPromptContent(
   return { filledTemplate, systemMessage: prompt.systemMessage };
 }
 
-async function callGemini(prompt: string, systemMessage: string) {
-  const model = getGeminiModel();
+async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
+  const model = getGeminiModel(mode);
   const result = await model.generateContent([{ text: systemMessage }, { text: prompt }]);
 
   const response = result.response;
@@ -88,7 +88,7 @@ export async function generate({ promptName, promptVersion, variables }: Generat
       promptVersion,
       variables
     );
-    return await callGemini(filledTemplate, systemMessage);
+    return await callGemini(filledTemplate, systemMessage, variables.mode);
   } catch (error) {
     console.error('Error generating content:', error);
     if (error instanceof GoogleGenerativeAIFetchError) {
