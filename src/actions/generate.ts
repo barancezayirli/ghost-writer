@@ -103,7 +103,7 @@ async function callGemini(prompt: string, systemMessage: string, mode: Mode) {
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
   try {
-    const { filledTemplate, systemMessage } = await getPromptContent(
+    const { filledTemplate, systemMessage } = getPromptContent(
       promptName,
       promptVersion,
       variables
