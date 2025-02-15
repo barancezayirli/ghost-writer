@@ -67,21 +67,27 @@ async function callGemini(prompt: string) {
   const model = getGeminiModel();
   const result = await model.generateContent([
     {
-      text: `You are a professional content writer. You must ONLY respond with Markdown content.
-Never include HTML tags. Use proper Markdown syntax for headings (#), lists (- or 1.), emphasis (*), 
-links ([]()), and other formatting. Your entire response must be valid Markdown.`,
+      text: `You are a professional content writer. You must ONLY respond with HTML content.
+Your response must be wrapped in a code block starting with \`\`\`html and ending with \`\`\`.
+Use proper HTML tags for structure and formatting. Your entire response must be valid HTML that can be directly inserted into a webpage.`,
     },
     { text: prompt },
   ]);
 
+  console.log('Gemini response:', result);
+
   const response = result.response;
   const content = response.text();
 
-  if (!content.startsWith('```markdown')) {
-    throw new Error('Response is not in the expected Markdown format');
+  if (!content.startsWith('```html')) {
+    throw new Error('Response is not in the expected HTML format');
   }
 
-  return content.replace(/^```markdown\n/, '').replace(/\n```$/, '');
+  // Remove ```html from the beginning and ``` from the end
+  return content
+    .replace(/^```html\n/, '')
+    .replace(/\n```$/, '')
+    .trim();
 }
 
 export async function generate({ promptName, promptVersion, variables }: GenerateParams) {
