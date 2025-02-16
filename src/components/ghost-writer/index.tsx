@@ -107,14 +107,12 @@ export default function GhostWriter() {
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send feedback';
+      console.error('Failed to submit feedback:', error);
+      // Vercel deployment is blocking the message, it is just to have a simple deploy so assuming it is a limit exceeded
       toast({
         title: 'Error',
         // This is because vercel doesn't want to show the error message
-        description:
-          errorMessage === 'limit exceeded'
-            ? "Fee gemini key has it's own limits :)"
-            : `Error: ${errorMessage}`,
+        description: "Free gemini key has it's own limits :)",
         variant: 'destructive',
       });
     }
