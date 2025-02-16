@@ -110,7 +110,11 @@ export default function GhostWriter() {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send feedback';
       toast({
         title: 'Error',
-        description: errorMessage,
+        // This is because vercel doesn't want to show the error message
+        description:
+          errorMessage === 'limit exceeded'
+            ? "Fee gemini key has it's own limits :)"
+            : `Error: ${errorMessage}`,
         variant: 'destructive',
       });
     }

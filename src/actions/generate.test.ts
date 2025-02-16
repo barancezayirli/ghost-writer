@@ -144,28 +144,40 @@ describe('generate', () => {
     });
   });
 
-  // Error cases
+  // Update error handling tests
   describe('error handling', () => {
-    it('should handle missing API key', async () => {
-      delete process.env.GOOGLE_API_KEY;
-
-      await expect(generate(defaultParams)).rejects.toThrow(
-        'Google API key is not set in the environment variables'
+    it('should propagate rate limit error (429)', async () => {
+      const rateLimitError = new GoogleGenerativeAIFetchError(
+        'Rate limit exceeded',
+        429,
+        'Too Many Requests'
       );
+      rateLimitError.status = 429;
+      mockGenerateContent.mockRejectedValueOnce(rateLimitError);
+
+      await expect(generate(defaultParams)).rejects.toThrow('limit exceeded');
     });
 
-    it('should handle API errors', async () => {
-      const apiError = new GoogleGenerativeAIFetchError('API Error', 500, 'Server Error');
-      apiError.statusText = 'Server Error';
+    it('should handle API errors with status', async () => {
+      const apiError = new GoogleGenerativeAIFetchError('API Error', 500, 'Internal Server Error');
+      apiError.status = 500;
+      apiError.statusText = 'Internal Server Error';
       mockGenerateContent.mockRejectedValueOnce(apiError);
 
-      await expect(generate(defaultParams)).rejects.toThrow('Server Error');
+      await expect(generate(defaultParams)).rejects.toThrow('Internal Server Error');
     });
 
-    it('should handle general errors', async () => {
-      mockGenerateContent.mockRejectedValueOnce(new Error('Unexpected error'));
+    it('should handle API errors without status', async () => {
+      const apiError = new GoogleGenerativeAIFetchError('API Error', undefined, undefined);
+      mockGenerateContent.mockRejectedValueOnce(apiError);
 
-      await expect(generate(defaultParams)).rejects.toThrow('Unexpected error');
+      await expect(generate(defaultParams)).rejects.toThrow('Error generating post');
+    });
+
+    it('should propagate validation errors directly', async () => {
+      mockGenerateContent.mockRejectedValueOnce(new Error('Validation failed'));
+
+      await expect(generate(defaultParams)).rejects.toThrow('Validation failed');
     });
   });
 });

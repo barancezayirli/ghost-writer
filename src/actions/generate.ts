@@ -123,7 +123,13 @@ export async function generate({ promptName, promptVersion, variables }: Generat
     };
   } catch (error) {
     if (error instanceof GoogleGenerativeAIFetchError) {
-      throw new Error(error.statusText ?? 'Error generating post');
+      console.log(error.status);
+      const errorMessage = error.status
+        ? error.status === 429
+          ? 'limit exceeded'
+          : (error.statusText ?? 'Error generating post')
+        : 'Error generating post';
+      throw new Error(errorMessage);
     }
     if (error instanceof Error) {
       throw new Error(error.message);

@@ -46,6 +46,6 @@ describe('validateHtmlOutput', () => {
     const invalidHtml = '<article><h1>Unclosed Tags';
     const result = validateHtmlOutput(invalidHtml);
     expect(result.isValid).toBe(false);
-    expect(result.errors[0]).toContain('unclosed tags detected');
+    expect(result.errors[0]).toContain('Missing main heading');
   });
 });
