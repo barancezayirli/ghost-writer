@@ -21,7 +21,6 @@ const prompt: PromptTemplate = {
 
 2. **Title Creation:**
     * Generate a concise and compelling title, no more than 60 characters.
-    * Optimize the title for a {{target audience}} audience.
     * Use strong power words and relevant keywords.
 
 3. **Introduction Writing:**
