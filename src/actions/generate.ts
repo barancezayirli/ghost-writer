@@ -122,6 +122,7 @@ export async function generate({ promptName, promptVersion, variables }: Generat
       requestId,
     };
   } catch (error) {
+    console.log('error generating', error);
     if (error instanceof GoogleGenerativeAIFetchError) {
       console.log(error.status);
       const errorMessage = error.status
