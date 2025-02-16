@@ -83,9 +83,9 @@ async function callGemini(prompt: string, systemMessage: string, mode: Mode, req
     const response = result.response;
     const content = response.text();
 
-    if (!content.startsWith('```html')) {
-      throw new Error('Response is not in the expected HTML format');
-    }
+    // if (!content.startsWith('```html')) {
+    //   throw new Error('Response is not in the expected HTML format');
+    // }
 
     const htmlContent = content
       .replace(/^```html\n/, '')

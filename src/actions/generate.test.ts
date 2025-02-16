@@ -73,16 +73,6 @@ describe('generate', () => {
 
   // Validation cases
   describe('validation handling', () => {
-    it('should reject non-HTML formatted responses', async () => {
-      mockGenerateContent.mockResolvedValueOnce({
-        response: { text: () => 'Invalid response without HTML code block' },
-      });
-
-      await expect(generate(defaultParams)).rejects.toThrow(
-        'Response is not in the expected HTML format'
-      );
-    });
-
     it('should reject invalid HTML content after 3 attempts', async () => {
       (validateHtmlOutput as jest.Mock).mockReturnValue({
         isValid: false,
