@@ -37,9 +37,11 @@ export default function GhostWriter() {
       setRequestId(response.requestId);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      console.error(`Failed to generate content: ${errorMessage}`);
+      // Vercel deployment is blocking the message, it is just to have a simple deploy so assuming it is a limit exceeded
       toast({
         title: 'Error',
-        description: errorMessage,
+        description: "Free gemini key has it's own limits :)",
         variant: 'destructive',
       });
     } finally {
